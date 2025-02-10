@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Note Taking App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="floating-controls">
+            <button id="toggleToolbar" class="control-toggle" title="Toggle Toolbar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="toolbar">
+                <div class="tool-group">
+                    <button id="penTool" class="tool active" title="Pen Tool">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button id="pencilTool" class="tool" title="Pencil Tool">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <button id="eraserTool" class="tool" title="Eraser">
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                    <div class="shapes-dropdown">
+                        <button id="shapesToggle" class="tool" title="Shapes">
+                            <i class="fas fa-shapes"></i>
+                        </button>
+                        <div class="shapes-menu">
+                            <button id="rectangleTool" class="tool shape-option" title="Rectangle">
+                                <i class="far fa-square"></i>
+                            </button>
+                            <button id="squareTool" class="tool shape-option" title="Square">
+                                <i class="fas fa-square"></i>
+                            </button>
+                            <button id="circleTool" class="tool shape-option" title="Circle">
+                                <i class="far fa-circle"></i>
+                            </button>
+                            <button id="ellipseTool" class="tool shape-option" title="Ellipse">
+                                <i class="fas fa-circle"></i>
+                            </button>
+                            <button id="arrowTool" class="tool shape-option" title="Arrow">
+                                <i class="fas fa-long-arrow-alt-right"></i>
+                            </button>
+                            <button id="lineTool" class="tool shape-option" title="Line">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button id="triangleTool" class="tool shape-option" title="Triangle">
+                                <i class="fas fa-play fa-rotate-270"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-group">
+                    <input type="color" id="colorPicker" value="#000000" title="Color Picker">
+                    <input type="range" id="strokeWidth" min="1" max="20" value="2" title="Stroke Width">
+                    <select id="fillStyle" title="Fill Style">
+                        <option value="outline">Outline</option>
+                        <option value="fill">Fill</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+                <div class="tool-group">
+                    <select id="pageStyle" title="Page Style">
+                        <option value="grid">Grid</option>
+                        <option value="dotted">Dotted</option>
+                        <option value="ruled">Ruled</option>
+                        <option value="plain">Plain</option>
+                    </select>
+                    <input type="color" id="pageColor" value="#ffffff" title="Page Color">
+                </div>
+                <div class="tool-group">
+                    <button id="undoBtn" title="Undo">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button id="clearBtn" title="Clear Page">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="tool-group">
+                    <button id="saveBtn" title="Save">
+                        <i class="fas fa-save"></i>
+                    </button>
+                    <button id="newPageBtn" class="new-page-btn" title="Add New Page">
+                        New Page
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="showToolbarBtn" class="show-toolbar-btn" title="Show Toolbar">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        
+        <div class="canvas-container">
+            <div class="page-tabs">
+                <div class="tab-list">
+                    <div class="tab active" data-page="0">
+                        <span class="tab-name" contenteditable="true">Page 1</span>
+                        <button class="tab-close"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="tab-actions">
+                    <button id="addTabBtn" title="Add New Page">
+                        <i class="fas fa-plus"></i>Add Page
+                    </button>
+                    <button id="saveAllBtn" title="Save All Pages">
+                        <i class="fas fa-file-archive"></i>Save All
+                    </button>
+                </div>
+            </div>
+            <div id="pageIndicator">Page 1 of 1</div>
+            <canvas id="drawingCanvas"></canvas>
+            <div class="page-controls">
+                <button id="fullscreenBtn" title="Toggle Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button id="toggleTabsBtn" title="Toggle Tabs View">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

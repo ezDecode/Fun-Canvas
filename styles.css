@@ -1,0 +1,586 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.container.fullscreen {
+    width: 100%;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+}
+
+.floating-controls {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    transition: transform 0.3s ease-out;
+}
+
+.floating-controls.collapsed {
+    transform: translateX(-100%);
+}
+
+.floating-controls.collapsed .control-toggle i {
+    transform: rotate(180deg);
+}
+
+.control-toggle {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    padding: 10px 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.control-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.toolbar {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-left: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.fullscreen-controls {
+    display: none;
+}
+
+#fullscreenBtn {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+#fullscreenBtn:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.05);
+}
+
+#fullscreenBtn i.fa-compress {
+    display: none;
+}
+
+.container.fullscreen #fullscreenBtn i.fa-expand {
+    display: none;
+}
+
+.container.fullscreen #fullscreenBtn i.fa-compress {
+    display: inline;
+}
+
+.tool-group {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tool-group:last-child {
+    border-bottom: none;
+}
+
+button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background-color: #e9ecef;
+}
+
+button.active {
+    background-color: #e9ecef;
+    color: #007bff;
+}
+
+input[type="color"] {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="range"] {
+    width: 100px;
+}
+
+.canvas-container {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+    z-index: 1;
+}
+
+#pageIndicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#drawingCanvas {
+    flex: 1;
+    background-color: white;
+    background-image: linear-gradient(#f0f0f0 1px, transparent 1px),
+                      linear-gradient(90deg, #f0f0f0 1px, transparent 1px);
+    background-size: 20px 20px;
+    cursor: crosshair;
+    position: relative;
+    z-index: 1;
+    touch-action: none;
+}
+
+/* Selection tool styles */
+.selection-area {
+    position: absolute;
+    border: 2px dashed #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+    cursor: move;
+}
+
+.selection-area.moving {
+    cursor: grabbing;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .toolbar {
+        padding: 5px;
+        gap: 10px;
+    }
+
+    .tool-group {
+        padding: 0 5px;
+    }
+
+    button {
+        padding: 6px;
+    }
+
+    input[type="range"] {
+        width: 80px;
+    }
+
+    select {
+        max-width: 100px;
+    }
+}
+
+select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    background-color: white;
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: #adb5bd;
+}
+
+.selection-controls {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 5px;
+    gap: 5px;
+    z-index: 100;
+}
+
+.selection-controls.show {
+    display: flex;
+}
+
+.selection-controls button {
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.selection-controls button:hover {
+    background-color: #e9ecef;
+}
+
+/* Update canvas background styles */
+#drawingCanvas.grid {
+    background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+#drawingCanvas.dotted {
+    background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+#drawingCanvas.ruled {
+    background-image: linear-gradient(var(--grid-color) 1px, transparent 1px);
+    background-size: 100% 20px;
+}
+
+#drawingCanvas.plain {
+    background-image: none;
+}
+
+.shapes-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding: 5px;
+}
+
+.shapes-group button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+}
+
+.shapes-group button i {
+    font-size: 1.1em;
+}
+
+#fillStyle {
+    width: 100%;
+    margin-top: 5px;
+}
+
+/* Remove selection-related styles */
+.selection-area,
+.selection-controls {
+    display: none;
+}
+
+/* Update cursor styles for shape tools */
+#drawingCanvas.shape-drawing {
+    cursor: crosshair;
+}
+
+/* Preview shape style */
+.shape-preview {
+    position: absolute;
+    pointer-events: none;
+    border: 1px dashed #007bff;
+}
+
+.shapes-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.shapes-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--toolbar-bg);
+    border-radius: 4px;
+    padding: 8px;
+    display: none;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.shapes-menu.visible {
+    display: grid;
+}
+
+.shape-option {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#showToolbarBtn {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--toolbar-bg);
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 10px;
+    cursor: pointer;
+    display: none;
+    z-index: 1000;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+#showToolbarBtn.visible {
+    display: block;
+}
+
+#showToolbarBtn:hover {
+    background: var(--toolbar-hover);
+}
+
+.new-page-btn {
+    background-color: #007bff !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.new-page-btn:hover {
+    background-color: #0056b3 !important;
+}
+
+.page-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+#newPageBtn,
+#fullscreenBtn {
+    background: var(--toolbar-bg);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+#newPageBtn:hover,
+#fullscreenBtn:hover {
+    background: var(--toolbar-hover);
+}
+
+/* Make shapes draggable */
+.shape-dragging {
+    cursor: move !important;
+}
+
+/* Remove bottom controls as they're no longer needed */
+.bottom-controls {
+    display: none;
+}
+
+.canvas-container.shape-dragging {
+    cursor: move;
+}
+
+/* Remove these styles */
+.modal,
+.modal.show,
+.modal-content,
+.modal-buttons,
+#savePromptBtn,
+#skipPromptBtn {
+    display: none !important;
+}
+
+.page-tabs {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+    height: 30vh;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    pointer-events: none;
+}
+
+.page-tabs.show {
+    display: flex;
+    pointer-events: auto;
+}
+
+.tab-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    align-content: flex-start;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 200px;
+    max-width: 300px;
+    height: 50px;
+}
+
+.tab-name {
+    flex: 1;
+    min-width: 100px;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Add a container for the action buttons */
+.tab-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid #dee2e6;
+}
+
+#addTabBtn,
+#saveAllBtn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    background: white;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+
+#addTabBtn i,
+#saveAllBtn i {
+    margin-right: 8px;
+}
+
+.tab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab.active {
+    background: #007bff;
+    color: white;
+    border-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+/* Scrollbar styling for the tab list */
+.tab-list::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.tab-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.tab-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.tab-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Add a tabs toggle button */
+#toggleTabsBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 80px;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+#toggleTabsBtn:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+/* Ensure controls stay on top */
+.floating-controls,
+.page-controls,
+#toggleTabsBtn {
+    z-index: 1002;
+}
+
+/* Adjust canvas container when tabs are shown */
+.canvas-container.tabs-visible {
+    height: calc(100% - 30vh);
+    transition: height 0.3s ease;
+} 
